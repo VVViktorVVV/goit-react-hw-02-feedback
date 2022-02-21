@@ -1,1 +1,1 @@
-export { default } from './feedbackButtons'
+export { default } from './feedbackOptions'

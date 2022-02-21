@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-// import FeedbackButtons from './Feedback'
-// import Statistics from './Statistics';
+import FeedbackOptions from './Feedback'
+import Statistics from './Statistics';
+import Section from './Section';
 
 
 
@@ -11,33 +12,14 @@ class App extends Component {
     bad: 0
   }
 
-  calcFeedbackGood = () => {
-       
-    this.setState(prevState => ({
-      good: prevState.good + 1,
-    }));
-    this.calcFeedbackTotal();
-    this.calcFeedbackes();
+  buttons = ['Good', 'Neutral', 'Bad'];
+
+  onLeaveFeedback = e => {
+    const name = e.currentTarget.innerText.toLowerCase();
+    return this.setState({ [name]: this.state[name] + 1 });
   };
-  
-   calcFeedbackNeutral = () => {
-       
-    this.setState(prevState => ({
-      neutral: prevState.neutral + 1,
-    }));
-     this.calcFeedbackTotal();
-     this.calcFeedbackes();
-   };
-  
-   calcFeedbackBad = () => {
-       
-    this.setState(prevState => ({
-      bad: prevState.bad + 1,
-    }));
-     this.calcFeedbackTotal();
-     this.calcFeedbackes();
-   };
-  
+
+    
   
   calcFeedbackTotal = () => {
      const total = Object.values(this.state).reduce((previousValue, number) => {
@@ -48,7 +30,7 @@ class App extends Component {
     
   }
   
-  calcFeedbackes = () => {
+  calcPositivePercentage = () => {
     const positiveFeedback = Math.round(
       ((this.state.good) / this.calcFeedbackTotal()) * 100);
     return positiveFeedback;
@@ -58,22 +40,30 @@ class App extends Component {
 
     render() {
         return (
-            <div>
-                <div>
-            <h1>Please leave feedback</h1>
-            <button type='button' onClick={this.calcFeedbackGood}>Good</button>
-            <button type='button' onClick={this.calcFeedbackNeutral}>Neutral</button>
-            <button type='button' onClick={this.calcFeedbackBad}>Bad</button>
+          <div>
+
+            <Section 
+              title='Please leave feedback'>
+            
+              <FeedbackOptions
+                options={this.buttons}
+                onLeaveFeedback={this.onLeaveFeedback}
+              />
+            </Section>
+          
+         
+            <Section 
+              title='Statistics'>
+            
+              <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.calcFeedbackTotal()}
+              positivePercentage={this.calcPositivePercentage()}
+            />
+            </Section>
         </div>
-                <h2>Statistics</h2>
-                <ul>
-                    <li className="statisticsList__item" name="good">Good: {this.state.good}</li>
-                    <li className="statisticsList__item" name="neutral">Neutral: {this.state.neutral}</li>
-                    <li className="statisticsList__item" name="bad">Bad: {this.state.bad}</li>
-              <li className="statisticsList__item">Total: {this.calcFeedbackTotal()} </li>
-              <li className="statisticsList__item">Positive feedback: {this.calcFeedbackes()}%</li>
-                </ul>
-            </div>
         )
 
     }
